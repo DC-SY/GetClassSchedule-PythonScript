@@ -1,2 +1,2 @@
-# GetClassSchedule-PythonScript
-## 说明
+# 快速上手
+> 正在开发中，敬请期待！
