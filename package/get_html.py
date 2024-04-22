@@ -1,7 +1,6 @@
 import time
 
 from selenium import webdriver
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
 
@@ -18,7 +17,7 @@ def get_html(username: str, password: str, path: str) -> None:
     # 指定窗口大小，某些情况下有帮助
     chrome_options.add_argument("window-size=1920x1080")
     # 指定驱动程序路径，并启用无头模式
-    driver = webdriver.Chrome(executable_path='../bin/chromedriver.exe', options=chrome_options)
+    driver = webdriver.Chrome(executable_path=r'bin/chromedriver.exe', options=chrome_options)
 
     print(f"\t->开始向服务器发送请求")
     driver.get("https://jwgl.cwxu.edu.cn/jwglxt/xtgl/login_slogin.html")
@@ -33,12 +32,15 @@ def get_html(username: str, password: str, path: str) -> None:
     # 点击登陆
     driver.find_element(By.ID, "dl").click()
     time.sleep(5)
+    print(f"\t->成功登录")
     # 进入课表页面
     driver.find_element(By.XPATH, "//*[contains(text(), '信息查询')]").click()
     time.sleep(1)
+    print(f"\t->进入个人课表查询")
 
     element1 = driver.find_element(By.XPATH, "//*[contains(text(), '个人课表查询')]")
     driver.execute_script("arguments[0].click();", element1)
+    print(f"\t->课表页面加载较慢，请等待")
     time.sleep(10)
     driver.switch_to.window(driver.window_handles[1])
 
