@@ -28,6 +28,7 @@ def get_html(username: str, password: str, path: str) -> None:
     chrome_options.add_argument("window-size=1920x1080")
     # 指定 Chrome 驱动的路径，并启用无头模式
     driver = webdriver.Chrome(executable_path=r'bin/chromedriver.exe', options=chrome_options)
+    # driver = webdriver.Chrome(executable_path=r'bin/chromedriver.exe')
 
     print(f"\t->开始向服务器发送请求")
     driver.get("https://jwgl.cwxu.edu.cn/jwglxt/xtgl/login_slogin.html")

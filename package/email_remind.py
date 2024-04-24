@@ -1,5 +1,5 @@
 import smtplib
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -33,7 +33,7 @@ def send_email(data: list, sender_mail: str, sender_pass: str, receiver_mails: l
             print(f"{receiver_mail}邮件发送失败，错误信息：{e}")
 
 
-def send_regularly():
+def send_regularly(data: list, sender_mail: str, sender_pass: str, receiver_mails: list):
     # dict_date = {
     #     "第一周": datetime(2024, 2, 26, 0, 0),
     #     "第二周": datetime(2024, 3, 4, 0, 0),
@@ -62,48 +62,39 @@ def send_regularly():
     while start_date < now_time:
         start_date += timedelta(weeks=1)
         week_number += 1
-    print(f"现在是第{week_number}周")
+    print(f"\t->本周是第{week_number}周")
     # 获取当日周几
     day_week = now_time.weekday() + 1
-    print(f"现在是周{day_week}")
-
-    start_time = time(8, 0)
-    now_hour = now_time.hour
-    if 0 < (now_hour - start_time.hour) < 2:
-        pass
+    print(f"\t->今天是周{day_week}")
+    time_formatted = now_time.strftime("%H:%M")
+    print(f"\t->现在是{time_formatted}")
+    print(f"\t->本周的课程有: ")
+    data_week = []
+    for class_content in data:
+        if week_number in class_content[1]:
+            print(f"\t\t{class_content}")
+            data_week.append(class_content)
+    print(f"\t->今天的课程有: ")
+    data_today = []
+    for class_content in data:
+        if week_number in class_content[1] and str(day_week) in class_content[-1][0]:
+            print(f"\t\t{class_content}")
+            data_today.append(class_content)
+    html = f"""
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>课程通知</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello!</h1>
+        <p>{data_today[0]}</p>
+        <p>{data_today[1]}</p>
+    </div>
+</body>
+</html>
+    """
+    send_email(data_today, sender_mail, sender_pass, receiver_mails, html)
 
     pass
-
-
-# def email_demo(data: list, sender_mail: str, sender_pass: str, receiver_mail: list, smtp_host: str, smtp_port: str) -> None:
-#     """
-#     邮件提醒模块
-#     :param smtp_host: 主机
-#     :param smtp_port: 端口
-#     :param receiver_mail: 接受者邮箱列表
-#     :param sender_pass: 发送者邮箱密码
-#     :param sender_mail: 发送这邮箱
-#     :param data: 提醒内容列表
-#     :return: None
-#     """
-#
-#     # 创建邮件对象和设置邮件头部信息
-#     message = MIMEMultipart()
-#     message['From'] = sender_mail
-#     message['To'] = receiver_mail
-#     message['Subject'] = "课程通知"
-#     body = MIMEText(str(data), 'plain')
-#     message.attach(body)
-#
-#     try:
-#         # 使用SMTP_SSL连接服务器
-#         with smtplib.SMTP_SSL('smtp.feishu.cn', 465) as server:
-#             server.login(sender_mail, sender_pass)
-#             server.sendmail(sender_mail, receiver_mail, message.as_string())
-#             print("邮件发送成功")
-#     except Exception as e:
-#         print(f"邮件发送失败，错误信息：{e}")
-
-
-if __name__ == '__main__':
-    send_regularly()
